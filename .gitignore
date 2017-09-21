@@ -1,0 +1,13 @@
+*.o
+*tinyC_lexer.cpp
+*tinyC_parser.cpp
+*tokens.h
+*tinyC
+*tinyC_parser.output
+
+
+*screen.elf
+*.o
+*.mif
+*.bin mem_files
+*screen.elf.s
