@@ -1,0 +1,352 @@
+#include <cstdio>
+#include <ctime>
+#include <cstdlib>
+#include <iostream>
+#include "ast.h"
+
+using namespace std;
+
+int lstringCount=0, labelsCount=0;
+
+string temps[] = {"$t0","$t1","$t2","$t3","$t4","$t5","$t6","$t7","$t8","$t9"};
+map<string, int> tempRegs;
+map<string, int> vars;
+map<string, string> lstrings;
+
+void releaseTemp(string tmp)
+{
+    if(tempRegs[tmp]!=0)
+    {
+        tempRegs[tmp]=0;
+    }
+}
+
+string nextTemp()
+{
+    for (int i = 0; i < 10; ++i)
+        if (tempRegs.find(temps[i]) == tempRegs.end() || tempRegs[temps[i]] == 0)
+        {
+            tempRegs[temps[i]] = 1;
+            return temps[i];
+        }
+    return "";
+}
+
+string nextLstringFor(string str)
+{
+    if(lstrings.find(str) == lstrings.end())
+    {
+        lstrings[str] = "lstring" + to_string(lstringCount++);
+    }
+    return lstrings[str];
+}
+
+string nextInternalLaber(string str)
+{
+    return string(".l") + str + to_string(labelsCount++);
+}
+
+/* Generating Code */
+
+#define gen(name) void name##Expr::genCode(codeData &data){}
+#define genS(name) void name##Statement::genCode(string &code){}
+#define genAdditiveCode(name,func) void name##Expr::genCode(codeData &data) \
+{   \
+    codeData re, le;    \
+    expr1->genCode(le); \
+    expr2->genCode(re); \
+    data.code = le.code + "\n" + re.code + "\n";    \
+    releaseTemp(le.place);  \
+    releaseTemp(re.place);  \
+    data.place = nextTemp();    \
+    data.code += "\t" #func " " + data.place + ", " + le.place + ", " + re.place;   \
+}
+#define genDivCode(name,reg) void name##Expr::genCode(codeData &data) \
+{  \
+    codeData re, le;  \
+    expr1->genCode(le); \
+    expr2->genCode(re); \
+    data.code = le.code + "\n" + re.code + "\n";  \
+    releaseTemp(le.place);  \
+    releaseTemp(re.place);  \
+    data.place = nextTemp();    \
+    data.code += "\tmove $a0, " + le.place + "\n";    \
+    data.code += "\tmove $a1, " + re.place + "\n";    \
+    data.code += "\taddi $sp, -8\n";  \
+    data.code += "\tmove $a2, $sp\n"; \
+    data.code += "\taddi $a3, $sp, 4\n";  \
+    data.code += "\tjal divide\n" ;   \
+    data.code += "\tlw " + data.place + ", ($" #reg ")\n";  \
+    data.code += "\taddi $sp, $sp, 8";    \
+}
+
+void NumExpr::genCode(codeData &data)
+{
+    data.place = nextTemp();
+    data.code = "\tli " + data.place + ", " + to_string(value);
+}
+
+void StringExpr::genCode(codeData &data)
+{
+    data.place = nextTemp();
+    data.code = "\tla " + data.place + ", "+nextLstringFor(str);
+}
+
+void IdExpr::genCode(codeData &data)
+{
+    data.place = nextTemp();
+    data.code = "\tlw " + data.place + ", " + id;
+}
+
+genAdditiveCode(Add,add);
+genAdditiveCode(Sub,sub);
+
+void MultExpr::genCode(codeData &data)
+{  
+    codeData re, le;  
+    expr1->genCode(le);
+    expr2->genCode(re);
+    data.code = le.code + "\n" + re.code + "\n";  
+    releaseTemp(le.place);
+    releaseTemp(re.place); 
+    data.place = nextTemp();
+
+    data.code += "\tmove $a0, " + le.place + "\n";
+    data.code += "\tmove $a1, " + re.place + "\n";
+    data.code += "\tjal mult\n" ; 
+    data.code += "\tmove " + data.place + ", $v0";
+}
+
+genDivCode(Div,a2);
+genDivCode(Mod,a3);
+
+void ExponentExpr::genCode(codeData &data)
+{
+    codeData re, le;  
+    expr1->genCode(le);
+    expr2->genCode(re);
+    data.code = le.code + "\n" + re.code + "\n";  
+    releaseTemp(le.place);
+    releaseTemp(re.place); 
+    data.place = nextTemp();
+
+    data.code += "\tmove $a0, " + le.place + "\n";
+    data.code += "\tmove $a1, " + re.place + "\n";
+    data.code += "\tjal exponent\n"; 
+    data.code += "\tmove " + data.place + ", $v0";
+}
+
+// gen(Input);
+void InputExpr::genCode(codeData &data)
+{
+    data.place = "$v0";
+    data.code = "\tla $a0, "+nextLstringFor(prompt)+"\n";
+    data.code += "\tjal puts\n\n";
+    data.code += ".get_key_loop:\n\tjal keypad_getkey\n\tbeqz $v0, .get_key_loop";
+    data.code += "\n\n\tli $a0, '\\n' \n\tjal put_char";
+}
+
+// gen(Call);
+void CallExpr::genCode(codeData &data)
+{
+    switch (fnId) {
+        case FN_TIMECLOCK: {
+            data.place = "$v0";
+            data.code = "\tlw $v0, MS_COUNTER_REG_ADDR\n";
+            return;
+        }
+        case FN_RANDINT: {
+            codeData la, ra;
+            arg0->genCode(la);
+            arg1->genCode(ra);
+            data.code = la.code + "\n" + ra.code + "\n";
+            data.place = nextTemp();
+            releaseTemp(la.place);
+            releaseTemp(ra.place);
+
+            data.code += "\taddi $sp, $sp, -8\n";
+            data.code += "\tsw " + la.place + ", ($sp)\n";
+            data.code += "\tsw " + ra.place + ", 4($sp)\n";
+            data.code += "\tjal rand\n";
+
+            data.code += "\tlw " + la.place + ", ($sp)\n";
+            data.code += "\tlw " + ra.place + ", 4($sp)\n";
+
+            data.code += "\tmove $a0, $v0\n";
+            data.code += "\tmove $a1, " + ra.place + "\n";
+            data.code += "\taddi $sp, -8\n"; 
+            data.code += "\tmove $a2, $sp\n";
+            data.code += "\taddi $a3, $sp, 4\n"; 
+            data.code += "\tjal divide\n";
+            data.code += "\tlw " + data.place + ", ($a3)\n"; 
+            data.code += "\taddi $sp, $sp, 8\n";
+            
+            data.code += "\tlw " + la.place + ", ($sp)\n";
+            data.code += "\tlw " + ra.place + ", 4($sp)\n";
+            data.code += "\taddi $sp, $sp, 8\n";
+
+            data.code += "\tadd $v0, "+data.place+", "+la.place;
+            
+            releaseTemp(data.place);
+            data.place = "$v0";
+        }
+    }
+}
+
+// Statements
+void PrintStatement::genCode(string &code)
+{
+    list<Expr *>::iterator it = lexpr.begin();
+    code = "# PrintStatement\n";
+
+    while (it != lexpr.end()) {
+        Expr *expr = *it;
+
+        codeData cd;
+        expr->genCode(cd);
+        code += cd.code+"\n";
+        releaseTemp(cd.place);
+        code += "\tmove $a0, " + cd.place+"\n";
+        
+        if (expr->isA(STRING_EXPR))
+            code += "\tjal puts\n";
+        else
+            code += "\tjal put_udecimal\n";
+        it++;
+    }
+    code += "\n\n\tli $a0, '\\n' \n\tjal put_char";
+
+    // printf("code:\n%s\n", code.c_str());
+}
+
+// genS(Call);
+void CallStatement::genCode(string &code)
+{
+    code = "# CallStatement\n";
+    switch (fnId) {
+        case FN_RANDSEED: {
+            codeData cd;
+            arg0->genCode(cd);
+            code += cd.code + "\n";
+            code += "\tmove $a0, "+cd.place+"\n";
+            code += "\tjal rand_seed";
+            releaseTemp(cd.place);
+        }
+        default: {
+            
+        }
+    }
+}
+
+// genS(Assign);
+void AssignStatement::genCode(string &code)
+{
+    vars[id] = 0;
+    // int result = expr->evaluate();
+    codeData cd;
+    expr->genCode(cd);
+
+    code = "# AssignStatement\n";
+    code += cd.code+"\n";
+    releaseTemp(cd.place);
+    code += "\tsw " + cd.place + ", " + id;
+}
+
+// genS(Block);
+void BlockStatement::genCode(string &code)
+{
+    list<Statement *>::iterator it = stList.begin();
+    code = "";
+    while (it != stList.end()) {
+        Statement *st = *it;
+
+        string c;
+        st->genCode(c);
+        code += "\n"+c+"\n";
+        // st->execute();
+        it++;
+    }
+}
+
+// genS(If);
+void IfStatement::genCode(string &code)
+{
+    codeData cd;
+    cond->genCode(cd);
+
+    string tr, fl;
+    trueBlock->genCode(tr);
+    falseBlock->genCode(fl);
+
+    string lelse = nextInternalLaber("else");
+    string lendif = nextInternalLaber("end_if");
+
+    code = "# IfStatement\n";
+    code += cd.code + "\n";
+    code += "\tbeqz " + cd.place + ", " + lelse;
+    releaseTemp(cd.place);
+
+    code += tr + "\n" + "\nj " + lendif + "\n";
+    code += lelse + ":\n";
+    code += fl + "\n" + lendif + ": \n";
+}
+
+// genS(While);
+void WhileStatement::genCode(string &code)
+{
+    codeData cd;
+    cond->genCode(cd);
+
+    string block_code;
+    block->genCode(block_code);
+
+    string lwhile = nextInternalLaber("while");
+    string lendwhile = nextInternalLaber("end_while");
+
+    code = "# WhileStatement\n";
+    code += lwhile + ": \n" + cd.code + "\n";
+    code += "\tbeqz " + cd.place + ", " + lendwhile + "\n";
+    releaseTemp(cd.place);
+    code += block_code + "\n\tj " + lwhile + "\n";
+    code += lendwhile + ": \n";
+}
+
+// genS(For);
+void ForStatement::genCode(string &code)
+{
+    vars[id] = 0;
+    codeData se,fe;
+    startExpr->genCode(se);
+    endExpr->genCode(fe);
+
+    string block_code;
+    block->genCode(block_code);
+
+    string lfor = nextInternalLaber("for");
+    string lendfor = nextInternalLaber("end_for");
+    string branch = nextTemp();
+
+    code = "# ForStatement\n";
+    code += se.code + "\n";
+    code += "\tsw " + se.place + ", " + id + "\n";
+    code += fe.code + "\n";
+    
+    code += "\taddi $sp, $sp, -4\n";
+    code += "\tsw " + fe.place + ", ($sp)\n";
+    code += lfor + ": \n";
+    code += "\tlw " + fe.place + ", ($sp)\n";
+    code += "\tsle " + branch + ", " + se.place + ", " + fe.place + "\n";
+    code += "\tbeqz " + branch + ", " + lendfor + "\n";
+    code += block_code + "\n";
+    code += "\tlw " + se.place + ", " + id + "\n";
+    code += "\taddi " + se.place + ", "+se.place + ", 1\n";
+    code += "\tsw " + se.place + ", " + id+"\n";
+    code += "\tj " + lfor + "\n";
+    code += lendfor + ": \n";
+    code += "\taddi $sp, $sp, 4";
+    releaseTemp(se.place);
+    releaseTemp(fe.place);
+    releaseTemp(branch);
+}
+
+genS(Pass);

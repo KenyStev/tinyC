@@ -1,9 +1,9 @@
-*.o
-*tinyC_lexer.cpp
-*tinyC_parser.cpp
-*tokens.h
-*tinyC
-*tinyC_parser.output
+*tinyC/src/.o
+*tinyC/src/tinyC_lexer.cpp
+*tinyC/src/tinyC_parser.cpp
+*tinyC/src/tokens.h
+*tinyC/src/tinyC
+*tinyC/src/tinyC_parser.output
 
 
 *screen.elf
