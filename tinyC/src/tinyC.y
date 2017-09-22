@@ -36,6 +36,8 @@ void yyerror(const char *str)
 
 %token IF_KW ELSE_KW WHILE_KW FOR_KW CONTINUE_KW BREAK_KW RETURN_KW
 
+%token KW_RANDSEED KW_RANDINT KW_TIMECLOCK
+
 %expect 1
 
 %start input

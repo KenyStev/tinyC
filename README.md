@@ -91,7 +91,6 @@ tinyC accept a reduced part of **c programming language** which is described rig
 - `if (expression) '{'? Statements '}'? {else Statements}?`
 - `for (expression; expression; expression) '{'? Statements '}'?`
 - `while (expression) '{'? Statements '}'?`
-- `do'{'? Statements '}'? while (expression) ;`
 - functions declaration and call functions
 
 ### Keywords
@@ -100,7 +99,6 @@ tinyC accept a reduced part of **c programming language** which is described rig
 | break		| BREAK_KW		|
 | char		| CHAR_KW		|
 | continue	| CONTINUE_KW	|
-| do		| DO_KW			|
 | else		| ELSE_KW		|
 | for		| FOR_KW		|
 | if		| IF_KW			|

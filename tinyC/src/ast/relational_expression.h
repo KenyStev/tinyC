@@ -3,10 +3,10 @@
 
 #include "ast.h"
 
-extern void releaseTemp(string tmp);
-extern string nextTemp();
-extern string nextLstringFor(string str);
-extern string nextInternalLaber(string str);
+void releaseTemp(string tmp);
+string nextTemp();
+string nextLstringFor(string str);
+string nextInternalLaber(string str);
 
 class LTExpr: public BinaryExpr {
 public:

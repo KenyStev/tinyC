@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include "../tokens.h"
 
 using namespace std;
 
@@ -13,6 +14,22 @@ typedef struct codeData
 {
     string code;
     string place;
+};
+
+class Token
+{
+public:
+    Token(int r, int c, yytokentype t, string l)
+    {
+        row=r;
+        col=c;
+        tokenType=t;
+        lexeme=t;
+    }
+    
+    int row, col;
+    yytokentype tokenType;
+    string lexeme;
 };
 
 enum BuiltInFunct {
@@ -60,54 +77,6 @@ public:
 
     Expr *expr1;
     Expr *expr2;
-};
-
-class AddExpr: public BinaryExpr {
-public:
-    AddExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int getKind() { return ADD_EXPR; }
-    void genCode(codeData &);
-};
-
-class SubExpr: public BinaryExpr {
-public:
-    SubExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int getKind() { return SUB_EXPR; }
-    void genCode(codeData &);
-};
-
-class MultExpr: public BinaryExpr {
-public:
-    MultExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int getKind() { return MULT_EXPR; }
-    void genCode(codeData &);
-};
-
-class DivExpr: public BinaryExpr {
-public:
-    DivExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int getKind() { return DIV_EXPR; }
-    void genCode(codeData &);
-};
-
-class ModExpr: public BinaryExpr {
-public:
-    ModExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int getKind() { return EXPT_EXPR; }
-    void genCode(codeData &);
-};
-
-class ExponentExpr: public BinaryExpr {
-public:
-    ExponentExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int getKind() { return MOD_EXPR; }
-    void genCode(codeData &);
 };
 
 class NumExpr: public Expr {

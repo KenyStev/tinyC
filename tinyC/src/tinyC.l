@@ -41,6 +41,9 @@ H			[a-fA-F0-9]
 "sizeof"		{ count(); return SIZEOF_KW; }
 "void"			{ count(); return VOID_KW; }
 "while"			{ count(); return WHILE_KW; }
+"srand" 		{ count(); return KW_RANDSEED; }
+"rand" 			{ count(); return KW_RANDINT; }
+"time" 			{ count(); return KW_TIMECLOCK; }
 
 {L}({L}|{D}|_)*		{ count(); return ID_TK; }
 
