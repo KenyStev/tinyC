@@ -10,7 +10,7 @@ using namespace std;
 
 extern map<string, int> vars;
 
-typedef struct codeData
+struct codeData
 {
     string code;
     string place;
@@ -60,6 +60,11 @@ enum ExprKind {
 
 class Expr;
 typedef list<Expr*> ExprList;
+
+void releaseTemp(string tmp);
+string nextTemp();
+string nextLstringFor(string str);
+string nextInternalLaber(string str);
 
 class Expr {
 public:
