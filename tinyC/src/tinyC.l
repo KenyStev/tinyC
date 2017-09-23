@@ -18,6 +18,7 @@
 #define YYERROR_VERBOSE 1
 
 int yycolumn = 0;
+char* yylexeme;
 
 void count();
 %}
@@ -29,6 +30,7 @@ H			[a-fA-F0-9]
 %%
 [ \t\n]			{ /* Nothing */ }
 "//".*\n		{ /* Line Comment */ }
+"#".*\n 		{ /*Name File*/ }
 "/*"			{ BEGIN(block_comment); }
 "break"			{ count(); return BREAK_KW; }
 "char"			{ count(); return CHAR_KW; }
@@ -116,6 +118,8 @@ void count() {
 			yycolumn += 8 - (yycolumn % 8);
 		else
 			yycolumn++;
+
+	yylexeme = strdup(yytext);
 
 	ECHO;
 }

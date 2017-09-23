@@ -10,6 +10,10 @@ using namespace std;
 
 extern map<string, int> vars;
 
+extern int yylineno;
+extern int yycolumn;
+extern char* yylexeme;
+
 struct codeData
 {
     string code;
@@ -19,16 +23,14 @@ struct codeData
 class Token
 {
 public:
-    Token(int r, int c, yytokentype t, string l)
+    Token(int r, int c, string l)
     {
         row=r;
         col=c;
-        tokenType=t;
-        lexeme=t;
+        lexeme=l;
     }
     
     int row, col;
-    yytokentype tokenType;
     string lexeme;
 };
 
@@ -58,6 +60,16 @@ enum ExprKind {
   CALL_EXPR
 };
 
+enum SemanticValidType
+{
+    INT_TYPE,
+    CHAR_TYPE,
+    VOID_TYPE,
+    ARRAY_INT_TYPE,
+    ARRAY_CHAR_TYPE,
+    STRING_TYPE
+};
+
 class Expr;
 typedef list<Expr*> ExprList;
 
@@ -71,6 +83,12 @@ public:
     virtual void genCode(codeData &) = 0;
     virtual int getKind() = 0;
     bool isA(int kind) { return (getKind() == kind); }
+
+    Expr() {
+        token = new Token(yylineno, yycolumn, yylexeme);
+    }
+
+    Token *token;
 };
 
 class BinaryExpr: public Expr {
@@ -152,6 +170,12 @@ class Statement {
 public:
     virtual void genCode(string &) = 0;
     virtual StatementKind getKind() = 0;
+
+    Statement() {
+        token = new Token(yylineno, yycolumn, yylexeme);
+    }
+
+    Token *token;
 };
 
 class BlockStatement: public Statement {

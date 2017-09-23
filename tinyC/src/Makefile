@@ -1,5 +1,5 @@
 TARGET = tinyC
-AST_SRC=ast/*
+AST_SRC=ast/*.cpp
 C_SRCFILES=${TARGET}_parser.cpp ${TARGET}_lexer.cpp $(AST_SRC) main.cpp
 OBJ_FILES=${C_SRCFILES:.cpp=.o}
 TOKENS=tokens.h

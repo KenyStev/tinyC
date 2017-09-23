@@ -2,7 +2,7 @@
  * File: ArithOperators.py
  * A test program for arithmethic operators
  *******************************************/
-
+#include "RelationalOperators.h"
 void main() {
     int x, y;
     
