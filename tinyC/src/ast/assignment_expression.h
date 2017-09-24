@@ -1,7 +1,7 @@
+#ifndef _ASSIGNMENT_EXPRESSION_H_
+#define _ASSIGNMENT_EXPRESSION_H_
 #include "ast.h"
 
-#ifndef _ARITHMETIC_EXPRESSION_H_
-#define _ARITHMETIC_EXPRESSION_H_
 
 class AssigmentExpr : public Expr
 {

@@ -1,3 +1,13 @@
+%code requires {
+	#include "ast/ast.h"
+	#include "ast/assignment_expression.h"
+	#include "ast/arithmetic_expressions.h"
+	#include "ast/bits_expression.h"
+	#include "ast/relational_expression.h"
+	#include "ast/unary_expression.h"
+	#include "ast/postfix_expression.h"
+}
+
 %{
 	/*
 	* Some parts retrived from: https://www.lysator.liu.se/c/ANSI-C-grammar-y.html#storage-class-specifier
@@ -176,9 +186,9 @@ primary_expression
 
 postfix_expression
 	: primary_expression
-	| postfix_expression '[' expression ']'
-	| postfix_expression '(' ')'
-	| postfix_expression '(' argument_expression_list ')'
+	| ID_TK '[' expression ']'
+	| ID_TK '(' ')'
+	| ID_TK '(' argument_expression_list ')'
 	| postfix_expression INC_OP
 	| postfix_expression DEC_OP
 	;

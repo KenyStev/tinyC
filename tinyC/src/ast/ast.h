@@ -4,7 +4,6 @@
 #include <string>
 #include <list>
 #include <map>
-#include "../tokens.h"
 
 using namespace std;
 
@@ -86,6 +85,7 @@ public:
 
     Expr() {
         token = new Token(yylineno, yycolumn, yylexeme);
+        free(yylexeme);
     }
 
     Token *token;
@@ -173,6 +173,7 @@ public:
 
     Statement() {
         token = new Token(yylineno, yycolumn, yylexeme);
+        free(yylexeme);
     }
 
     Token *token;
@@ -226,15 +227,6 @@ public:
     Expr *cond;
     Statement *trueBlock;
     Statement *falseBlock;
-};
-
-class PassStatement: public Statement {
-public:
-    PassStatement() {
-    }
-    void execute() {} ;
-    void genCode(string &);
-    StatementKind getKind() { return PASS_STATEMENT; }
 };
 
 class WhileStatement: public Statement {
