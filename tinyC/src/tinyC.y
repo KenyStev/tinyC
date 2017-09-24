@@ -6,6 +6,7 @@
 	#include "ast/relational_expression.h"
 	#include "ast/unary_expression.h"
 	#include "ast/postfix_expression.h"
+	#include "ast/statements/declaration_statement.h"
 }
 
 %{
@@ -138,21 +139,15 @@ selection_statement
 	| IF_KW '(' expression ')' statement ELSE_KW statement
 	;
 
-identifier_list
-	: ID_TK
-	| identifier_list ',' ID_TK
-	;
-
 declarator
 	: direct_declarator
 	;
 
 direct_declarator
 	: ID_TK
-	| ID_TK '[' constant_expression ']'
+	| ID_TK '[' NUMBER_TK ']'
 	| ID_TK '[' ']'
 	| ID_TK '(' parameter_type_list ')'
-	| ID_TK '(' identifier_list ')'
 	| ID_TK '(' ')'
 	;
 
@@ -305,10 +300,6 @@ assignment_operator
 expression
 	: assignment_expression
 	| conditional_expression
-	;
-
-constant_expression
-	: conditional_expression
 	;
 
 %%

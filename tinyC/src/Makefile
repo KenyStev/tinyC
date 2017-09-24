@@ -1,5 +1,5 @@
 TARGET = tinyC
-AST_SRC=ast/*.cpp
+AST_SRC=ast/*.cpp ast/statements/*.cpp
 C_SRCFILES=${TARGET}_parser.cpp ${TARGET}_lexer.cpp $(AST_SRC) main.cpp
 OBJ_FILES=${C_SRCFILES:.cpp=.o}
 TOKENS=tokens.h
@@ -21,6 +21,7 @@ ${TARGET}_parser.cpp: ${TARGET}.y
 
 clean:
 	rm -f *.o
+	rm -f ast/*.o
 	rm -f ${TARGET}_lexer.cpp
 	rm -f ${TARGET}_parser.cpp
 	rm -f ${TOKENS}

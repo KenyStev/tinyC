@@ -35,7 +35,9 @@ public:
 };
 
 class Expr;
+class Parameter;
 typedef list<Expr*> ExprList;
+typedef list<Parameter*> ParamList;
 
 void releaseTemp(string tmp);
 string nextTemp();
@@ -140,17 +142,6 @@ public:
 
     BuiltInFunct fnId;
     Expr *arg0, *arg1;
-};
-
-enum StatementKind {
-    BLOCK_STATEMENT,
-    PRINT_STATEMENT,
-    ASSIGN_STATEMENT,
-    IF_STATEMENT,
-    WHILE_STATEMENT,
-	FOR_STATEMENT,
-	PASS_STATEMENT,
-    CALL_STATEMENT
 };
 
 class Statement {

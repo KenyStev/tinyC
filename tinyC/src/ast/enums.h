@@ -56,7 +56,9 @@ enum ExprKind {
   BIT_NOT_EXPR,
   LOGIC_NOT_EXPR,
   SIZEOF_EXPR,
-  SIZEOF_TYPE_EXPR
+  SIZEOF_TYPE_EXPR,
+  LOGIC_OR_EXPR,
+  LOGIC_AND_EXPR
 };
 
 enum SemanticValidType
@@ -67,6 +69,26 @@ enum SemanticValidType
     ARRAY_INT_TYPE,
     ARRAY_CHAR_TYPE,
     STRING_TYPE
+};
+
+enum StatementKind {
+    BLOCK_STATEMENT,
+    PRINT_STATEMENT,
+    ASSIGN_STATEMENT,
+    IF_STATEMENT,
+    WHILE_STATEMENT,
+    FOR_STATEMENT,
+    PASS_STATEMENT,
+    CALL_STATEMENT,
+    VAR_DEC_STATEMENT,
+    FUNC_DEC_STATEMENT
+};
+
+enum DeclaratorKind
+{
+  ID_K,
+  ARRAY,
+  FUNC_PROTOTYPE
 };
 
 #endif
