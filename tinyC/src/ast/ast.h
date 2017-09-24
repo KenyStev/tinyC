@@ -36,8 +36,11 @@ public:
 
 class Expr;
 class Parameter;
+class Statement;
+
 typedef list<Expr*> ExprList;
 typedef list<Parameter*> ParamList;
+typedef list<Statement*> StatementList;
 
 void releaseTemp(string tmp);
 string nextTemp();
@@ -157,17 +160,6 @@ public:
     Token *token;
 };
 
-class BlockStatement: public Statement {
-public:
-    BlockStatement() {}
-    void genCode(string &);
-    StatementKind getKind() { return BLOCK_STATEMENT; }
-	void add(Statement *st) { stList.push_back(st); }
-
-    list<Statement *> stList;
-};
-
-
 class AssignStatement: public Statement {
 public:
     AssignStatement(string id, Expr *expr) {
@@ -192,21 +184,6 @@ public:
     ExprList lexpr;
 };
 
-class IfStatement: public Statement {
-public:
-    IfStatement(Expr *cond, Statement *trueBlock, Statement *falseBlock) {
-        this->cond = cond;
-        this->trueBlock = trueBlock;
-        this->falseBlock = falseBlock;
-    }
-    void genCode(string &);
-    StatementKind getKind() { return IF_STATEMENT; }
-
-    Expr *cond;
-    Statement *trueBlock;
-    Statement *falseBlock;
-};
-
 class CallStatement: public Statement {
 public:
     CallStatement(BuiltInFunct fnId, Expr *arg0) {
@@ -222,6 +199,16 @@ public:
 
     BuiltInFunct fnId;
     Expr *arg0, *arg1;
+};
+
+class CompilationUnit
+{
+public:
+    CompilationUnit()
+    {
+
+    }
+    
 };
 
 #endif

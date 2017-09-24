@@ -2,6 +2,19 @@
 #define _DECLARATION_STATEMENT_H_
 #include "../ast.h"
 
+class ExternalDeclaration : public Statement
+{
+public:
+	ExternalDeclaration()
+	{
+
+	}
+
+	StatementKind getKind() { return EXTERNAL_STATEMENT; }
+	
+	SemanticValidType type;
+};
+
 class Declarator
 {
 public:
@@ -19,7 +32,7 @@ public:
 	DeclaratorKind decType;
 };
 
-class VariableDeclaration : public Statement
+class VariableDeclaration : public ExternalDeclaration
 {
 public:
 	VariableDeclaration(string id, ExprList exprList, SemanticValidType type)
@@ -34,7 +47,23 @@ public:
 
     string id;
     ExprList initializer;
-    SemanticValidType type;
+};
+
+class ArrayDeclaration : public ExternalDeclaration
+{
+public:
+	ArrayDeclaration(string id, int size, SemanticValidType type)
+	{
+		this->id = id;
+		this->size=size;
+		this->type=type;
+	}
+
+	StatementKind getKind() { return ARRAY_DEC_STATEMENT; }
+    void genCode(codeData &);
+
+    string id;
+    int size;
 };
 
 class Parameter
@@ -52,32 +81,24 @@ public:
     SemanticValidType type;
 };
 
-class FuncPrototypeDeclaration : public Statement
-{
+class BlockStatement: public Statement {
 public:
-	FuncPrototypeDeclaration(string id, ParamList parameters, SemanticValidType type)
-	{
-		this->id=id;
-		this->parameters=parameters;
-		this->returnType=type;
-	}
-	
-	StatementKind getKind() { return FUNC_DEC_STATEMENT; }
-    void genCode(codeData &);
+    BlockStatement() {}
+    void genCode(string &);
+    StatementKind getKind() { return BLOCK_STATEMENT; }
+	void add(Statement *st) { stList.push_back(st); }
 
-    string id;
-    ParamList parameters;
-    SemanticValidType returnType;
+    list<Statement *> stList;
 };
 
-class FunctionDeclaration : public Statement
+class FunctionDeclaration : public ExternalDeclaration
 {
 public:
 	FunctionDeclaration(string id, ParamList parameters, SemanticValidType type, BlockStatement *body)
 	{
 		this->id=id;
 		this->parameters=parameters;
-		this->returnType=type;
+		this->type=type;
 		this->body=body;
 	}
 	
@@ -86,7 +107,6 @@ public:
 
     string id;
     ParamList parameters;
-    SemanticValidType returnType;
     BlockStatement *body;
 };
 
