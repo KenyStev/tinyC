@@ -3,85 +3,95 @@
 #include "ast.h"
 
 
-class AssigmentExpr : public Expr
+class AssignmentExpr : public Expr
 {
 public:
-	AssigmentExpr(Expr *expr1, Expr *expr2)
+	AssignmentExpr(Expr *expr1, Expr *expr2)
 	{
 		this->expr1 = expr1;
 		this->expr2 = expr2;
 	}
-	
+	int getKind() { return ASSIGN_EXPR; }
 	Expr *expr1,*expr2;
 };
 
-class MultAssigmentExpr : public AssigmentExpr
+class MultAssignmentExpr : public AssignmentExpr
 {
 public:
-	MultAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	MultAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return MULT_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class DivAssigmentExpr : public AssigmentExpr
+class DivAssignmentExpr : public AssignmentExpr
 {
 public:
-	DivAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	DivAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return DIV_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class ModAssigmentExpr : public AssigmentExpr
+class ModAssignmentExpr : public AssignmentExpr
 {
 public:
-	ModAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	ModAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return MOD_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class AddAssigmentExpr : public AssigmentExpr
+class AddAssignmentExpr : public AssignmentExpr
 {
 public:
-	AddAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	AddAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return ADD_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class SubAssigmentExpr : public AssigmentExpr
+class SubAssignmentExpr : public AssignmentExpr
 {
 public:
-	SubAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	SubAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return SUB_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class LeftAssigmentExpr : public AssigmentExpr
+class LeftAssignmentExpr : public AssignmentExpr
 {
 public:
-	LeftAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	LeftAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return LEFT_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class RightAssigmentExpr : public AssigmentExpr
+class RightAssignmentExpr : public AssignmentExpr
 {
 public:
-	RightAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	RightAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return RIGHT_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class AndAssigmentExpr : public AssigmentExpr
+class AndAssignmentExpr : public AssignmentExpr
 {
 public:
-	AndAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	AndAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return AND_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class XorAssigmentExpr : public AssigmentExpr
+class XorAssignmentExpr : public AssignmentExpr
 {
 public:
-	XorAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	XorAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return XOR_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 
-class OrAssigmentExpr : public AssigmentExpr
+class OrAssignmentExpr : public AssignmentExpr
 {
 public:
-	OrAssigmentExpr(Expr *expr1, Expr *expr2) : AssigmentExpr(expr1,expr2) {}
+	OrAssignmentExpr(Expr *expr1, Expr *expr2) : AssignmentExpr(expr1,expr2) {}
+	int getKind() { return OR_ASSIGN_EXPR; }
 	void genCode(codeData &);
 };
 

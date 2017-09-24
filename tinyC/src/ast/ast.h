@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include "enums.h"
 
 using namespace std;
 
@@ -31,42 +32,6 @@ public:
     
     int row, col;
     string lexeme;
-};
-
-enum BuiltInFunct {
-    FN_TIMECLOCK,
-    FN_RANDSEED,
-    FN_RANDINT
-};
-
-enum ExprKind {
-  LT_EXPR,
-  LTE_EXPR,
-  GT_EXPR,
-  GTE_EXPR,
-  NE_EXPR,
-  EQ_EXPR,
-  ADD_EXPR,
-  SUB_EXPR,
-  MULT_EXPR,
-  DIV_EXPR,
-  MOD_EXPR,
-  EXPT_EXPR,
-  NUM_EXPR,
-  ID_EXPR,
-  STRING_EXPR,
-  INPUT_EXPR,
-  CALL_EXPR
-};
-
-enum SemanticValidType
-{
-    INT_TYPE,
-    CHAR_TYPE,
-    VOID_TYPE,
-    ARRAY_INT_TYPE,
-    ARRAY_CHAR_TYPE,
-    STRING_TYPE
 };
 
 class Expr;
@@ -127,6 +92,28 @@ public:
     void genCode(codeData &);
 
     string str;
+};
+
+class CharExpr: public Expr {
+public:
+    CharExpr(char str) { this->str = str; }
+    int getKind() { return CHAR_EXPR; }
+    void genCode(codeData &);
+
+    char str;
+};
+
+class CastExpr : public Expr
+{
+public:
+    CastExpr(SemanticValidType typeName, Expr *expr)
+    {
+        this->typeName = typeName;
+        this->expr = expr;
+    }
+    
+    SemanticValidType typeName;
+    Expr *expr;
 };
 
 class InputExpr: public Expr {

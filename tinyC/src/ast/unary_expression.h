@@ -10,6 +10,7 @@ public:
 	{
 		this->expr = expr;
 	}
+	int getKind() { return PRE_INC_EXPR; }
 	void genCode(codeData &);
 
 	Expr *expr;
@@ -22,6 +23,7 @@ public:
 	{
 		this->expr = expr;
 	}
+	int getKind() { return PRE_DEC_EXPR; }
 	void genCode(codeData &);
 
 	Expr *expr;
@@ -34,6 +36,7 @@ public:
 	{
 		this->expr = expr;
 	}
+	int getKind() { return POSITIVE_NUM_EXPR; }
 	void genCode(codeData &);
 
 	Expr *expr;
@@ -46,6 +49,7 @@ public:
 	{
 		this->expr = expr;
 	}
+	int getKind() { return NEGATIVE_NUM_EXPR; }
 	void genCode(codeData &);
 
 	Expr *expr;
@@ -58,6 +62,7 @@ public:
 	{
 		this->expr = expr;
 	}
+	int getKind() { return BIT_NOT_EXPR; }
 	void genCode(codeData &);
 
 	Expr *expr;
@@ -70,6 +75,7 @@ public:
 	{
 		this->expr = expr;
 	}
+	int getKind() { return LOGIC_NOT_EXPR; }
 	void genCode(codeData &);
 
 	Expr *expr;
@@ -82,6 +88,7 @@ public:
 	{
 		this->expr = expr;
 	}
+	int getKind() { return SIZEOF_EXPR; }
 	void genCode(codeData &);
 
 	Expr *expr;
@@ -94,6 +101,7 @@ public:
 	{
 		this->targetType = targetType;
 	}
+	int getKind() { return SIZEOF_TYPE_EXPR; }
 	void genCode(codeData &);
 
 	SemanticValidType targetType;

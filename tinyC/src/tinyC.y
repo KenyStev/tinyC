@@ -65,8 +65,8 @@ external_declaration
 	;
 
 function_definition
-	: type_specifier declarator compound_statement
-	| declarator compound_statement
+	: type_specifier ID_TK '(' ')' compound_statement
+	| type_specifier ID_TK '(' parameter_type_list ')' compound_statement
 	;
 
 compound_statement

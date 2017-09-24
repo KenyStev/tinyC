@@ -1,5 +1,5 @@
-#ifndef _POSTFIX_EXPRESSION_H
-#define _POSTFIX_EXPRESSION_H
+#ifndef _POSTFIX_EXPRESSION_H_
+#define _POSTFIX_EXPRESSION_H_
 #include "ast.h"
 
 class ArrayAccessExpr
@@ -10,6 +10,7 @@ public:
 		this->expr = expr;
 	}
 
+	int getKind() { return ACCESS_ARRAY_EXPR; }
 	string id;
 	Expr *expr;
 };
@@ -22,6 +23,7 @@ public:
 		expressions = exprList;
 	}
 
+	int getKind() { return CALL_FUNC_EXPR; }
 	string id;
 	ExprList expressions;
 };
@@ -34,6 +36,7 @@ public:
 		this->expr = expr;
 	}
 
+	int getKind() { return POST_INC_EXPR; }
 	Expr *expr;
 };
 
@@ -45,6 +48,7 @@ public:
 		this->expr = expr;
 	}
 
+	int getKind() { return POST_DEC_EXPR; }
 	Expr *expr;
 };
 
