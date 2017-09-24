@@ -7,6 +7,7 @@
 	#include "ast/unary_expression.h"
 	#include "ast/postfix_expression.h"
 	#include "ast/statements/declaration_statement.h"
+	#include "ast/statements/iteration_statement.h"
 }
 
 %{

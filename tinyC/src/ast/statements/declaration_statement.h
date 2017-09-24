@@ -37,6 +37,21 @@ public:
     SemanticValidType type;
 };
 
+class Parameter
+{
+public:
+	Parameter(string id, SemanticValidType type)
+	{
+		this->id = id;
+		this->type=type;
+	}
+
+    void genCode(codeData &);
+
+	string id;
+    SemanticValidType type;
+};
+
 class FuncPrototypeDeclaration : public Statement
 {
 public:
