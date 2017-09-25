@@ -22,7 +22,7 @@ ${TARGET}_parser.cpp: ${TARGET}.y
 clean:
 	rm -f $(wildcard *.o)
 	rm -f $(wildcard ast/*.o)
-	rm -f ast/statements/*.o
+	rm -f $(wildcard ast/statements/*.o)
 	rm -f ${TARGET}_lexer.cpp
 	rm -f ${TARGET}_parser.cpp
 	rm -f ${TOKENS}

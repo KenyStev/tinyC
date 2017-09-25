@@ -27,9 +27,13 @@ main:
 	move $a0, $v0
 	jal rand_seed
 
+# ExpressionStatement
 
+	move $v0, 
 
+# ExpressionStatement
 
+	move $v0, 
 
 # PrintStatement
 	la $t0, lstring0
@@ -126,6 +130,18 @@ main:
 	jal divide
 	lw $t0, ($a3)
 	addi $sp, $sp, 8
+	move $a0, $t0
+	jal put_udecimal
+
+
+	li $a0, '\n' 
+	jal put_char
+
+# PrintStatement
+	la $t0, lstring5
+	move $a0, $t0
+	jal puts
+	li $t0, 'H'
 	move $a0, $t0
 	jal put_udecimal
 

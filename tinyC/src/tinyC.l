@@ -53,7 +53,7 @@ H			[a-fA-F0-9]
 0[xX]{H}+			{ count(); return NUMBER_TK; }
 {D}+				{ count(); return NUMBER_TK; }
 
-'(\\.|[^\\'])+'		{ count(); return CHAR_LITERAL_TK; }
+'(\\.|[^\\'])+'		{ count(); yytext[yyleng-1] = '\0'; yylval.id_t = strdup(&yytext[1]); return CHAR_LITERAL_TK; }
 \"(\\.|[^\\"])*\"	{ count(); yytext[yyleng-1] = '\0'; yylval.id_t = strdup(&yytext[1]); return STRING_LITERAL_TK; }
 
 ">>="			{ count(); return RIGHT_ASSIGN; }

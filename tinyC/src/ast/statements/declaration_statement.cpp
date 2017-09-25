@@ -15,7 +15,7 @@ void Declaration::genCode(string &code)
 
 void VariableDeclaration::genCode(string &code)
 {
-
+    
 }
 
 void ArrayDeclaration::genCode(string &code)
@@ -51,7 +51,12 @@ void FunctionDeclaration::genCode(string &code)
 
 void ExpressionStatement::genCode(string &code)
 {
-	
+	code = "# ExpressionStatement\n";
+    codeData s;
+    expr->genCode(s);
+    code += s.code + "\n";
+    code += "\tmove $v0, " + s.place;
+    place = "$v0";
 }
 
 void BlockStatement::genCode(string &code)

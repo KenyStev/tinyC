@@ -99,11 +99,11 @@ public:
 
 class CharExpr: public Expr {
 public:
-    CharExpr(char str) { this->str = str; }
+    CharExpr(string value) { this->value = value; }
     int getKind() { return CHAR_EXPR; }
     void genCode(codeData &);
 
-    char str;
+    string value;
 };
 
 class CastExpr : public Expr

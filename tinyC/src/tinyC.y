@@ -40,7 +40,6 @@ CompilationUnit *input;
 %}
 
 %union {
-	char char_t;
     char *id_t;
     int  num_t;
     SemanticValidType semtype_t;
@@ -59,7 +58,7 @@ CompilationUnit *input;
 
 %token TK_ERROR 
 %token<num_t> NUMBER_TK
-%token<char_t> CHAR_LITERAL_TK 
+%token<id_t> CHAR_LITERAL_TK 
 %token<id_t> ID_TK STRING_LITERAL_TK
 
 %token SIZEOF_KW PRINT_KW
@@ -88,7 +87,6 @@ CompilationUnit *input;
 
 %type<declarator_t> init_declarator
 %type<declarator_t> declarator
-%type<declarator_t> direct_declarator
 
 %type<parameter_t> parameter_declaration
 
@@ -200,10 +198,6 @@ init_declarator
 	;
 
 declarator
-	: direct_declarator { $$ = $1; }
-	;
-
-direct_declarator
 	: ID_TK	{
 		string id = $1;
         free($1);
@@ -300,7 +294,12 @@ primary_expression
         free($1);
         $$ = new IdExpr(id);
 	}
-	| CHAR_LITERAL_TK	{ $$ = new CharExpr($1); }
+	| CHAR_LITERAL_TK	{
+		string str = $1;
+
+	    free($1);
+		$$ = new CharExpr(str);
+	}
 	| STRING_LITERAL_TK	{
 		string str = $1;
 

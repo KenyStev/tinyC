@@ -151,6 +151,7 @@ public:
 	void genCode(string &code);
 	
 	Expr *expr;
+	string place;
 };
 
 #endif

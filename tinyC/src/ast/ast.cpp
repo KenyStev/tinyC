@@ -166,7 +166,9 @@ void CompilationUnit::genCode(string &code)
     }
 }
 
-void CharExpr::genCode(codeData &cd)
+void CharExpr::genCode(codeData &data)
 {
-
+    data.place = nextTemp();
+    data.code = string("\tli ") + data.place + ", '" + value + "'";
+    printf("%s\n", data.code.c_str());
 }

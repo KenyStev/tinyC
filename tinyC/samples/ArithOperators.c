@@ -18,4 +18,5 @@ void main() {
     printf("Mul %d\n", x * y);
     printf("Div %d\n", x / y);
     printf("Mod %d\n", x % y);
+    printf("Mod %d\n", 'H');
 }
