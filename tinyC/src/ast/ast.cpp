@@ -187,7 +187,14 @@ void AssignStatement::genCode(string &code)
 
 void CompilationUnit::genCode(string &code)
 {
-    
+    code = "";
+    for (StatementList::iterator it = declarations.begin();
+        it != declarations.end(); it++)
+    {
+        string s;
+        (*it)->genCode(s);
+        code += s;
+    }
 }
 
 void CharExpr::genCode(codeData &cd)

@@ -43,6 +43,10 @@ H			[a-fA-F0-9]
 "sizeof"		{ count(); return SIZEOF_KW; }
 "void"			{ count(); return VOID_KW; }
 "while"			{ count(); return WHILE_KW; }
+"printf" 		{ count(); return PRINT_KW; }
+"srand" 		{ count(); return RANDSEED_KW; }
+"rand" 			{ count(); return RANDINT_KW; }
+"time" 			{ count(); return TIMECLOCK_KW; }
 
 {L}({L}|{D}|_)*		{ count(); yylval.id_t = strdup(yytext); return ID_TK; }
 

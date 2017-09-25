@@ -20,7 +20,7 @@
 
 #include <cstdio>
 #include <string>
-//#include "ast.h"
+#include "ast/ast.h"
 
 using namespace std;
 
@@ -36,7 +36,7 @@ void yyerror(const char *str)
 
 #define YYERROR_VERBOSE 1
 
-//Statement *input;
+CompilationUnit *input;
 %}
 
 %union {
@@ -62,7 +62,7 @@ void yyerror(const char *str)
 %token<char_t> CHAR_LITERAL_TK 
 %token<id_t> ID_TK STRING_LITERAL_TK
 
-%token SIZEOF_KW
+%token SIZEOF_KW PRINT_KW
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
@@ -81,6 +81,7 @@ void yyerror(const char *str)
 %type<statement_t> jump_statement
 %type<statement_t> selection_statement
 %type<statement_t> function_definition
+%type<statement_t> print_statement
 %type<statement_t> declaration 
 
 %type<declarator_t> init_declarator
@@ -229,7 +230,16 @@ statement
 	| selection_statement
 	| iteration_statement
 	| jump_statement
-	| compound_statement	{ $$ = (Statement*)$1; }
+	| compound_statement	{ $$ = $1; }
+	| print_statement ';'	{ $$ = $1; }
+	;
+
+print_statement
+	: PRINT_KW '(' STRING_LITERAL_TK ',' argument_expression_list ')' {
+		string f = $3;
+		free($3);
+		$$ = new PrintStatement(f,*$5);
+	}
 	;
 
 iteration_statement

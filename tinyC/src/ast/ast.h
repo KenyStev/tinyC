@@ -175,12 +175,14 @@ public:
 
 class PrintStatement: public Statement {
 public:
-    PrintStatement(ExprList lexpr) {
+    PrintStatement(string format,ExprList lexpr) {
+        this->format = format;
         this->lexpr = lexpr;
     }
     void genCode(string &);
     StatementKind getKind() { return PRINT_STATEMENT; }
 
+    string format;
     ExprList lexpr;
 };
 
