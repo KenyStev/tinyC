@@ -34,16 +34,16 @@ void fillTemplate(string &code)
 	}
 
 	string mainStart = 	".text\n\n";
-	mainStart +=		"main:\n";
+	// mainStart +=		"main:\n";
 
-    mainStart += 		"\tli $a0, BRIGHT_WHITE\n";
-    mainStart +=		"\tli $a1, BLACK\n";
-    mainStart +=		"\tjal set_color\n";
-    mainStart +=		"\tjal clear_screen\n\n";
+    // mainStart += 		"\tli $a0, BRIGHT_WHITE\n";
+    // mainStart +=		"\tli $a1, BLACK\n";
+    // mainStart +=		"\tjal set_color\n";
+    // mainStart +=		"\tjal clear_screen\n\n";
 
-    string finalLine = "\tjr $ra";
+    // string finalLine = "\tjr $ra";
 
-    code = header + varsData + lstringsData + mainStart + code + finalLine;
+    code = header + varsData + lstringsData + mainStart + code;// + finalLine;
 }
 
 int main(int argc, char *argv[])
@@ -68,6 +68,7 @@ int main(int argc, char *argv[])
 
     string MIPS32_CODE;
     if (input != 0) {
+    	printf("input in not NULL\n");
     	input->genCode(MIPS32_CODE);
         // input->execute();
     }

@@ -74,6 +74,7 @@ CompilationUnit *input;
 
 //Statements
 %type<compunit_t> input
+%type<compunit_t> compilation_unit
 
 %type<statement_t> statement
 %type<statement_t> external_declaration
@@ -82,6 +83,7 @@ CompilationUnit *input;
 %type<statement_t> selection_statement
 %type<statement_t> function_definition
 %type<statement_t> print_statement
+%type<statement_t> call_statement
 %type<statement_t> declaration 
 
 %type<declarator_t> init_declarator
@@ -127,11 +129,15 @@ CompilationUnit *input;
 %%
 
 input
+	: compilation_unit { $$ = $1; input = $$; }
+	;
+
+compilation_unit
 	: external_declaration	{
 		$$ = new CompilationUnit();
 		$$->add($1);
 	}
-	| input external_declaration	{
+	| compilation_unit external_declaration	{
 		$$ = $1;
 		$$->add($2);
 	}
@@ -232,13 +238,12 @@ statement
 	| jump_statement
 	| compound_statement	{ $$ = $1; }
 	| print_statement ';'	{ $$ = $1; }
+	| call_statement ';'	{ $$ = $1; }
 	;
 
 print_statement
-	: PRINT_KW '(' STRING_LITERAL_TK ',' argument_expression_list ')' {
-		string f = $3;
-		free($3);
-		$$ = new PrintStatement(f,*$5);
+	: PRINT_KW '(' argument_expression_list ')' {
+		$$ = new PrintStatement(*$3);
 	}
 	;
 
@@ -257,6 +262,10 @@ jump_statement
 optional_expression
 	: expression 	{ $$ = $1; }
 	|				{ $$ = NULL; }
+	;
+
+call_statement
+	: RANDSEED_KW '(' expression ')' { $$ = new CallStatement(FN_RANDSEED, $3); }
 	;
 
 selection_statement
@@ -299,6 +308,8 @@ primary_expression
         $$ = new StringExpr(str);
 	}
 	| NUMBER_TK	{ $$ = new NumExpr($1); }
+	| TIMECLOCK_KW '(' NUMBER_TK ')' { $$ = new CallExpr(FN_TIMECLOCK); }
+    | RANDINT_KW '(' ')'  { $$ = new CallExpr(FN_RANDINT); }
 	| '(' expression ')'	{ $$ = $2; }
 	;
 

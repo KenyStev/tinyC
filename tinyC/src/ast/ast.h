@@ -133,16 +133,10 @@ public:
     CallExpr(BuiltInFunct fnId) { 
         this->fnId = fnId; 
     }
-    CallExpr(BuiltInFunct fnId, Expr *arg0, Expr *arg1) { 
-        this->fnId = fnId;
-        this->arg0 = arg0;
-        this->arg1 = arg1;
-    }
     int getKind() { return CALL_EXPR; }
     void genCode(codeData &);
 
     BuiltInFunct fnId;
-    Expr *arg0, *arg1;
 };
 
 class Statement {
@@ -175,14 +169,12 @@ public:
 
 class PrintStatement: public Statement {
 public:
-    PrintStatement(string format,ExprList lexpr) {
-        this->format = format;
+    PrintStatement(ExprList lexpr) {
         this->lexpr = lexpr;
     }
     void genCode(string &);
     StatementKind getKind() { return PRINT_STATEMENT; }
 
-    string format;
     ExprList lexpr;
 };
 

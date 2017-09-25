@@ -89,38 +89,7 @@ void CallExpr::genCode(codeData &data)
             return;
         }
         case FN_RANDINT: {
-            codeData la, ra;
-            arg0->genCode(la);
-            arg1->genCode(ra);
-            data.code = la.code + "\n" + ra.code + "\n";
-            data.place = nextTemp();
-            releaseTemp(la.place);
-            releaseTemp(ra.place);
-
-            data.code += "\taddi $sp, $sp, -8\n";
-            data.code += "\tsw " + la.place + ", ($sp)\n";
-            data.code += "\tsw " + ra.place + ", 4($sp)\n";
             data.code += "\tjal rand\n";
-
-            data.code += "\tlw " + la.place + ", ($sp)\n";
-            data.code += "\tlw " + ra.place + ", 4($sp)\n";
-
-            data.code += "\tmove $a0, $v0\n";
-            data.code += "\tmove $a1, " + ra.place + "\n";
-            data.code += "\taddi $sp, -8\n"; 
-            data.code += "\tmove $a2, $sp\n";
-            data.code += "\taddi $a3, $sp, 4\n"; 
-            data.code += "\tjal divide\n";
-            data.code += "\tlw " + data.place + ", ($a3)\n"; 
-            data.code += "\taddi $sp, $sp, 8\n";
-            
-            data.code += "\tlw " + la.place + ", ($sp)\n";
-            data.code += "\tlw " + ra.place + ", 4($sp)\n";
-            data.code += "\taddi $sp, $sp, 8\n";
-
-            data.code += "\tadd $v0, "+data.place+", "+la.place;
-            
-            releaseTemp(data.place);
             data.place = "$v0";
         }
     }
@@ -149,7 +118,7 @@ void PrintStatement::genCode(string &code)
     }
     code += "\n\n\tli $a0, '\\n' \n\tjal put_char";
 
-    // printf("code:\n%s\n", code.c_str());
+    printf("code:\n%s\n", code.c_str());
 }
 
 // genS(Call);
@@ -191,7 +160,7 @@ void CompilationUnit::genCode(string &code)
     for (StatementList::iterator it = declarations.begin();
         it != declarations.end(); it++)
     {
-        string s;
+        string s = "";
         (*it)->genCode(s);
         code += s;
     }
