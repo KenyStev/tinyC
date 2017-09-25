@@ -33,8 +33,9 @@ void FunctionDeclaration::genCode(string &code)
 {
     code = "# FunctionDeclaration \n";
 
-    string sb;
-    body->genCode(sb);
+    string sb = "";
+    if(body)
+        body->genCode(sb);
 
     code += id + ":\n";
 

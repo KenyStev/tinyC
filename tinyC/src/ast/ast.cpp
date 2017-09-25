@@ -99,26 +99,55 @@ void CallExpr::genCode(codeData &data)
 void PrintStatement::genCode(string &code)
 {
     list<Expr *>::iterator it = lexpr.begin();
+    list<Expr *>::iterator str_f = lexpr.begin();
     code = "# PrintStatement\n";
 
-    while (it != lexpr.end()) {
-        Expr *expr = *it;
+    if (!(*str_f)->isA(STRING_EXPR))
+    {
+        throw "First Parameter must be string!";
+    }
 
-        codeData cd;
-        expr->genCode(cd);
-        code += cd.code+"\n";
-        releaseTemp(cd.place);
-        code += "\tmove $a0, " + cd.place+"\n";
-        
-        if (expr->isA(STRING_EXPR))
-            code += "\tjal puts\n";
-        else
-            code += "\tjal put_udecimal\n";
-        it++;
+    it++;
+    string format = ((StringExpr*)*str_f)->str;
+    string buff;
+    for (int i = 0; i < format.size(); ++i)
+    {
+        if (format[i]=='%')
+        {
+            string ls = nextLstringFor(buff);
+            code += "\tla $a0, " + ls + "\n";
+            code += "\tjal puts\n\n";
+            buff = "";
+
+            i++;
+            Expr *expr = *it;
+            codeData cd;
+            expr->genCode(cd);
+            code += cd.code+"\n";
+            releaseTemp(cd.place);
+            code += "\tmove $a0, " + cd.place+"\n";
+
+            switch(format[i])
+            {
+                case 's': {
+                    code += "\tjal puts\n";
+                    break;
+                }
+                case 'c': {
+                    code += "\tjal put_char\n";
+                    break;
+                }
+                default: {
+                    code += "\tjal put_udecimal\n";
+                    break;
+                }
+            }
+            it++;
+        }else{
+            buff.push_back(format[i]);
+        }
     }
     code += "\n\n\tli $a0, '\\n' \n\tjal put_char";
-
-    printf("code:\n%s\n", code.c_str());
 }
 
 // genS(Call);

@@ -8,8 +8,8 @@ void main() {
     
     srand(time(0));
 
-    x = 5;//rand() % 100 + 1;
-    y = 7;//rand() % 100 + 1;
+    x = rand() % 100 + 1;
+    y = rand() % 100 + 1;
 
     printf("X = %d, Y = %d\n", x, y);
 
@@ -18,5 +18,5 @@ void main() {
     printf("Mul %d\n", x * y);
     printf("Div %d\n", x / y);
     printf("Mod %d\n", x % y);
-    printf("Mod %d\n", 'H');
+    printf("Mod %c\n", 'H');
 }
