@@ -15,7 +15,8 @@ void Declaration::genCode(string &code)
 
 void VariableDeclaration::genCode(string &code)
 {
-    
+    vars[id] = 0;
+    printf("Entro a VariableDeclaration\n");
 }
 
 void ArrayDeclaration::genCode(string &code)
@@ -61,8 +62,19 @@ void ExpressionStatement::genCode(string &code)
 
 void BlockStatement::genCode(string &code)
 {
-    list<Statement *>::iterator it = stList.begin();
     code = "";
+    list<Statement *>::iterator itd = decList.begin();
+    while (itd != decList.end()) {
+        Statement *st = *itd;
+
+        string c;
+        st->genCode(c);
+        code += "\n"+c+"\n";
+        itd++;
+    }
+
+    list<Statement *>::iterator it = stList.begin();
+    // code = "";
     while (it != stList.end()) {
         Statement *st = *it;
 

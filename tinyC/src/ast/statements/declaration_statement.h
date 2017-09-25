@@ -119,8 +119,7 @@ public:
     StatementKind getKind() { return BLOCK_STATEMENT; }
 	void add(Statement *st) { stList.push_back(st); }
 
-    list<Statement *> stList;
-    list<Statement *> decList;
+    list<Statement *> decList, stList;
 };
 
 class FunctionDeclaration : public Declarator

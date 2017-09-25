@@ -8,8 +8,8 @@ void main() {
     
     srand(time(0));
 
-    x = rand() % 100 + 1;
-    y = rand() % 100 + 1;
+    x = 5;//rand() % 100 + 1;
+    y = 7;//rand() % 100 + 1;
 
     printf("X = %d, Y = %d\n", x, y);
 

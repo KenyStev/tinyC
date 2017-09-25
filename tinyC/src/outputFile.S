@@ -3,6 +3,8 @@
 .global main
 
 .data
+	x: .word 0
+	y: .word 0
 
 
 	lstring1: .asciz "Add %d\n"
@@ -21,6 +23,8 @@ main:
 	jal clear_screen
 
 
+
+
 # CallStatement
 	lw $v0, MS_COUNTER_REG_ADDR
 
@@ -28,36 +32,26 @@ main:
 	jal rand_seed
 
 # ExpressionStatement
-
-	move $v0, 
+# AssignmentExpr
+	li $t1, 342239392
+	sw $t1, x
+	move $v0, $t0
 
 # ExpressionStatement
-
-	move $v0, 
-
-# PrintStatement
-	la $t0, lstring0
-	move $a0, $t0
-	jal puts
-	lw $t0, x
-	move $a0, $t0
-	jal put_udecimal
-	lw $t0, y
-	move $a0, $t0
-	jal put_udecimal
-
-
-	li $a0, '\n' 
-	jal put_char
+# AssignmentExpr
+	li $t2, 342239952
+	sw $t2, y
+	move $v0, $t1
 
 # PrintStatement
-	la $t0, lstring1
-	move $a0, $t0
+	la $t2, lstring0
+	move $a0, $t2
 	jal puts
-	lw $t0, x
-	lw $t1, y
-	add $t0, $t0, $t1
-	move $a0, $t0
+	lw $t2, x
+	move $a0, $t2
+	jal put_udecimal
+	lw $t2, y
+	move $a0, $t2
 	jal put_udecimal
 
 
@@ -65,13 +59,13 @@ main:
 	jal put_char
 
 # PrintStatement
-	la $t0, lstring2
-	move $a0, $t0
+	la $t2, lstring1
+	move $a0, $t2
 	jal puts
-	lw $t0, x
-	lw $t1, y
-	sub $t0, $t0, $t1
-	move $a0, $t0
+	lw $t2, x
+	lw $t3, y
+	add $t2, $t2, $t3
+	move $a0, $t2
 	jal put_udecimal
 
 
@@ -79,16 +73,30 @@ main:
 	jal put_char
 
 # PrintStatement
-	la $t0, lstring3
-	move $a0, $t0
+	la $t2, lstring2
+	move $a0, $t2
 	jal puts
-	lw $t0, x
-	lw $t1, y
-	move $a0, $t0
-	move $a1, $t1
+	lw $t2, x
+	lw $t3, y
+	sub $t2, $t2, $t3
+	move $a0, $t2
+	jal put_udecimal
+
+
+	li $a0, '\n' 
+	jal put_char
+
+# PrintStatement
+	la $t2, lstring3
+	move $a0, $t2
+	jal puts
+	lw $t2, x
+	lw $t3, y
+	move $a0, $t2
+	move $a1, $t3
 	jal mult
-	move $t0, $v0
-	move $a0, $t0
+	move $t2, $v0
+	move $a0, $t2
 	jal put_udecimal
 
 
@@ -96,20 +104,20 @@ main:
 	jal put_char
 
 # PrintStatement
-	la $t0, lstring4
-	move $a0, $t0
+	la $t2, lstring4
+	move $a0, $t2
 	jal puts
-	lw $t0, x
-	lw $t1, y
-	move $a0, $t0
-	move $a1, $t1
+	lw $t2, x
+	lw $t3, y
+	move $a0, $t2
+	move $a1, $t3
 	addi $sp, -8
 	move $a2, $sp
 	addi $a3, $sp, 4
 	jal divide
-	lw $t0, ($a2)
+	lw $t2, ($a2)
 	addi $sp, $sp, 8
-	move $a0, $t0
+	move $a0, $t2
 	jal put_udecimal
 
 
@@ -117,20 +125,20 @@ main:
 	jal put_char
 
 # PrintStatement
-	la $t0, lstring5
-	move $a0, $t0
+	la $t2, lstring5
+	move $a0, $t2
 	jal puts
-	lw $t0, x
-	lw $t1, y
-	move $a0, $t0
-	move $a1, $t1
+	lw $t2, x
+	lw $t3, y
+	move $a0, $t2
+	move $a1, $t3
 	addi $sp, -8
 	move $a2, $sp
 	addi $a3, $sp, 4
 	jal divide
-	lw $t0, ($a3)
+	lw $t2, ($a3)
 	addi $sp, $sp, 8
-	move $a0, $t0
+	move $a0, $t2
 	jal put_udecimal
 
 
@@ -138,11 +146,11 @@ main:
 	jal put_char
 
 # PrintStatement
-	la $t0, lstring5
-	move $a0, $t0
+	la $t2, lstring5
+	move $a0, $t2
 	jal puts
-	li $t0, 'H'
-	move $a0, $t0
+	li $t2, 'H'
+	move $a0, $t2
 	jal put_udecimal
 
 
