@@ -1,6 +1,6 @@
 #include "unary_expression.h"
 
-void PreIncExpr::genCode(codeData &cd)
+void PreIncExpr::genCode(codeData &data)
 {
 	string id = ((IdExpr*)expr)->id;
 	data.place = nextTemp();
@@ -12,7 +12,7 @@ void PreIncExpr::genCode(codeData &cd)
 	releaseTemp(place);
 }
 
-void PreDecExpr::genCode(codeData &cd)
+void PreDecExpr::genCode(codeData &data)
 {
 	string id = ((IdExpr*)expr)->id;
 	data.place = nextTemp();
@@ -24,36 +24,35 @@ void PreDecExpr::genCode(codeData &cd)
 	releaseTemp(place);
 }
 
-void PositiveNumberExpr::genCode(codeData &cd)
+void PositiveNumberExpr::genCode(codeData &data)
 {
 
 }
 
-void NegativeNumberExpr::genCode(codeData &cd)
+void NegativeNumberExpr::genCode(codeData &data)
 {
 
 }
 
-void BitNotExpr::genCode(codeData &cd)
+void BitNotExpr::genCode(codeData &data)
 {
 	string id = ((IdExpr*)expr)->id;
 	data.place = nextTemp();
 
 	data.code += "\txori " + data.place + ", 0xffff\n";
-	releaseTemp(place);
 }
 
-void LogicNotExpr::genCode(codeData &cd)
+void LogicNotExpr::genCode(codeData &data)
 {
 
 }
 
-void SizeOfExpr::genCode(codeData &cd)
+void SizeOfExpr::genCode(codeData &data)
 {
 
 }
 
-void SizeOfTypeExpr::genCode(codeData &cd)
+void SizeOfTypeExpr::genCode(codeData &data)
 {
 
 }
