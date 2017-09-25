@@ -43,17 +43,14 @@ H			[a-fA-F0-9]
 "sizeof"		{ count(); return SIZEOF_KW; }
 "void"			{ count(); return VOID_KW; }
 "while"			{ count(); return WHILE_KW; }
-"srand" 		{ count(); return KW_RANDSEED; }
-"rand" 			{ count(); return KW_RANDINT; }
-"time" 			{ count(); return KW_TIMECLOCK; }
 
-{L}({L}|{D}|_)*		{ count(); return ID_TK; }
+{L}({L}|{D}|_)*		{ count(); yylval.id_t = strdup(yytext); return ID_TK; }
 
 0[xX]{H}+			{ count(); return NUMBER_TK; }
 {D}+				{ count(); return NUMBER_TK; }
 
 '(\\.|[^\\'])+'		{ count(); return CHAR_LITERAL_TK; }
-\"(\\.|[^\\"])*\"	{ count(); return STRING_LITERAL_TK; }
+\"(\\.|[^\\"])*\"	{ count(); yytext[yyleng-1] = '\0'; yylval.id_t = strdup(&yytext[1]); return STRING_LITERAL_TK; }
 
 ">>="			{ count(); return RIGHT_ASSIGN; }
 "<<="			{ count(); return LEFT_ASSIGN; }

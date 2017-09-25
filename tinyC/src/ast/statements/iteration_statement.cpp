@@ -23,7 +23,7 @@ void WhileStatement::genCode(string &code)
 // genS(For);
 void ForStatement::genCode(string &code)
 {
-    vars[id] = 0;
+    // vars[id] = 0;
     codeData se,fe;
     startExpr->genCode(se);
     endExpr->genCode(fe);
@@ -37,7 +37,7 @@ void ForStatement::genCode(string &code)
 
     code = "# ForStatement\n";
     code += se.code + "\n";
-    code += "\tsw " + se.place + ", " + id + "\n";
+    // code += "\tsw " + se.place + ", " + id + "\n";
     code += fe.code + "\n";
     
     code += "\taddi $sp, $sp, -4\n";
@@ -47,9 +47,9 @@ void ForStatement::genCode(string &code)
     code += "\tsle " + branch + ", " + se.place + ", " + fe.place + "\n";
     code += "\tbeqz " + branch + ", " + lendfor + "\n";
     code += block_code + "\n";
-    code += "\tlw " + se.place + ", " + id + "\n";
+    // code += "\tlw " + se.place + ", " + id + "\n";
     code += "\taddi " + se.place + ", "+se.place + ", 1\n";
-    code += "\tsw " + se.place + ", " + id+"\n";
+    // code += "\tsw " + se.place + ", " + id+"\n";
     code += "\tj " + lfor + "\n";
     code += lendfor + ": \n";
     code += "\taddi $sp, $sp, 4";

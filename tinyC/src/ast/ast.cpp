@@ -184,3 +184,13 @@ void AssignStatement::genCode(string &code)
     releaseTemp(cd.place);
     code += "\tsw " + cd.place + ", " + id;
 }
+
+void CompilationUnit::genCode(string &code)
+{
+    
+}
+
+void CharExpr::genCode(codeData &cd)
+{
+
+}

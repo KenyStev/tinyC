@@ -35,11 +35,9 @@ public:
 };
 
 class Expr;
-class Parameter;
 class Statement;
 
 typedef list<Expr*> ExprList;
-typedef list<Parameter*> ParamList;
 typedef list<Statement*> StatementList;
 
 void releaseTemp(string tmp);
@@ -55,7 +53,7 @@ public:
 
     Expr() {
         token = new Token(yylineno, yycolumn, yylexeme);
-        free(yylexeme);
+        // free(yylexeme);
     }
 
     Token *token;
@@ -154,8 +152,10 @@ public:
 
     Statement() {
         token = new Token(yylineno, yycolumn, yylexeme);
-        free(yylexeme);
+        // free(yylexeme);
     }
+
+    bool isA(StatementKind t){ return getKind()==t; }
 
     Token *token;
 };
@@ -208,7 +208,14 @@ public:
     {
 
     }
-    
+
+    void add(Statement*s)
+    {
+        declarations.push_back(s);
+    }
+    void genCode(string &);
+
+    StatementList declarations;
 };
 
 #endif

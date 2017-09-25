@@ -17,8 +17,8 @@ public:
 
 class ForStatement: public Statement {
 public:
-    ForStatement(string id, Expr *startExpr, Expr *endExpr, Statement *block) {
-        this->id = id;
+    ForStatement(Expr *startExpr,Expr *cond, Expr *endExpr, Statement *block) {
+        this->cond = cond;
         this->startExpr = startExpr;
         this->endExpr = endExpr;
         this->block = block;
@@ -26,7 +26,7 @@ public:
     void genCode(string &);
     StatementKind getKind() { return FOR_STATEMENT; }
 
-    string id;
+    Expr *cond;
     Expr *startExpr;
     Expr *endExpr;
     Statement *block;

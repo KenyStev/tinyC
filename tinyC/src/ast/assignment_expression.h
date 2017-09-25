@@ -12,6 +12,7 @@ public:
 		this->expr2 = expr2;
 	}
 	int getKind() { return ASSIGN_EXPR; }
+	void genCode(codeData &);
 	Expr *expr1,*expr2;
 };
 

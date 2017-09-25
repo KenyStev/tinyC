@@ -2,6 +2,14 @@
 #define _DECLARATION_STATEMENT_H_
 #include "../ast.h"
 
+class Parameter;
+class Declarator;
+class Declaration;
+
+typedef list<Parameter*> ParamList;
+typedef list<Declarator*> DeclaratorList;
+typedef list<Declaration*> DeclarationList;
+
 class ExternalDeclaration : public Statement
 {
 public:
@@ -11,103 +19,138 @@ public:
 	}
 
 	StatementKind getKind() { return EXTERNAL_STATEMENT; }
-	
+};
+
+class Declarator : public ExternalDeclaration
+{
+public:
+	Declarator(string id)
+	{
+		this->id = id;
+	}
+
+	void setType(SemanticValidType type)
+	{
+		this->type=type;
+	}
+
+	string id;
 	SemanticValidType type;
 };
 
-class Declarator
+class Declaration : public ExternalDeclaration
 {
 public:
-	Declarator(string id, ParamList params, int size, DeclaratorKind dec)
+	Declaration(SemanticValidType type, DeclaratorList declarators)
 	{
-		this->id = id;
-		this->params = params;
-		this->size = size;
-		this->decType = dec;
+		this->declarators = declarators;
+		DeclaratorList::iterator it = this->declarators.begin();
+
+  		while (it != this->declarators.end()) {
+  			(*it)->setType(type);
+  			it++;
+  		}
 	}
-	
-	string id;
-	int size;
-	ParamList params;
-	DeclaratorKind decType;
+	void genCode(string &);
+	DeclaratorList declarators;
 };
 
-class VariableDeclaration : public ExternalDeclaration
+class VariableDeclaration : public Declarator
 {
 public:
-	VariableDeclaration(string id, ExprList exprList, SemanticValidType type)
+	VariableDeclaration(string id) : Declarator(id)
 	{
-		this->id = id;
-		this->initializer=exprList;
-		this->type=type;
+		this->initializer=NULL;
 	}
 
 	StatementKind getKind() { return VAR_DEC_STATEMENT; }
-    void genCode(codeData &);
+    void genCode(string &);
 
-    string id;
-    ExprList initializer;
+    Expr *initializer;
 };
 
-class ArrayDeclaration : public ExternalDeclaration
+class ArrayDeclaration : public Declarator
 {
 public:
-	ArrayDeclaration(string id, int size, SemanticValidType type)
+	ArrayDeclaration(string id, int size) : Declarator(id)
 	{
-		this->id = id;
 		this->size=size;
-		this->type=type;
 	}
 
 	StatementKind getKind() { return ARRAY_DEC_STATEMENT; }
-    void genCode(codeData &);
+    void genCode(string &);
 
-    string id;
     int size;
 };
 
-class Parameter
+class Parameter 
 {
 public:
-	Parameter(string id, SemanticValidType type)
+	Parameter(SemanticValidType type, Declarator *dec)
 	{
-		this->id = id;
-		this->type=type;
+		this->declarator = dec;
+		this->declarator->setType(type);
 	}
 
-    void genCode(codeData &);
+	Parameter(SemanticValidType type) 
+	{
+		declarator=NULL;
+	}
 
-	string id;
-    SemanticValidType type;
+    void genCode(string &);
+    Declarator *declarator;
 };
 
 class BlockStatement: public Statement {
 public:
     BlockStatement() {}
+    
+    BlockStatement(StatementList d, StatementList s) {
+    	stList = s;
+    	decList = d;
+    }
+    void setStmtList(StatementList s) {
+    	stList = s;
+    }
+    void setDecList(StatementList d) {
+    	decList = d;
+    }
     void genCode(string &);
     StatementKind getKind() { return BLOCK_STATEMENT; }
 	void add(Statement *st) { stList.push_back(st); }
 
     list<Statement *> stList;
+    list<Statement *> decList;
 };
 
-class FunctionDeclaration : public ExternalDeclaration
+class FunctionDeclaration : public Declarator
 {
 public:
-	FunctionDeclaration(string id, ParamList parameters, SemanticValidType type, BlockStatement *body)
+	FunctionDeclaration(string id, ParamList *parameters, BlockStatement *body) : Declarator(id)
 	{
-		this->id=id;
 		this->parameters=parameters;
-		this->type=type;
 		this->body=body;
 	}
 	
 	StatementKind getKind() { return FUNC_DEC_STATEMENT; }
-    void genCode(codeData &);
+    void genCode(string &);
 
-    string id;
-    ParamList parameters;
+    ParamList *parameters;
     BlockStatement *body;
+};
+
+class ExpressionStatement : public Statement
+{
+public:
+	ExpressionStatement(Expr *expr)
+	{
+		this->expr=expr;
+	}
+
+	StatementKind getKind() { return EXPRESSION_STATEMENT; }
+	void genCode(string &code);
+	
+	Expr *expr;
 };
 
 #endif

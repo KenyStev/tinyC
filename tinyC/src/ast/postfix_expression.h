@@ -2,7 +2,7 @@
 #define _POSTFIX_EXPRESSION_H_
 #include "ast.h"
 
-class ArrayAccessExpr
+class ArrayAccessExpr : public Expr
 {
 public:
 	ArrayAccessExpr(string id, Expr *expr)
@@ -11,24 +11,26 @@ public:
 	}
 
 	int getKind() { return ACCESS_ARRAY_EXPR; }
+	void genCode(codeData &);
 	string id;
 	Expr *expr;
 };
 
-class CallFunctionExpr 
+class CallFunctionExpr : public Expr
 {
 public:
-	CallFunctionExpr(string id, ExprList exprList)
+	CallFunctionExpr(string id, ExprList *exprList)
 	{
 		expressions = exprList;
 	}
 
 	int getKind() { return CALL_FUNC_EXPR; }
+	void genCode(codeData &);
 	string id;
-	ExprList expressions;
+	ExprList *expressions;
 };
 
-class PostIncExpr 
+class PostIncExpr : public Expr
 {
 public:
 	PostIncExpr(Expr *expr)
@@ -37,10 +39,11 @@ public:
 	}
 
 	int getKind() { return POST_INC_EXPR; }
+	void genCode(codeData &);
 	Expr *expr;
 };
 
-class PostDecExpr 
+class PostDecExpr : public Expr
 {
 public:
 	PostDecExpr(Expr *expr)
@@ -49,6 +52,7 @@ public:
 	}
 
 	int getKind() { return POST_DEC_EXPR; }
+	void genCode(codeData &);
 	Expr *expr;
 };
 
