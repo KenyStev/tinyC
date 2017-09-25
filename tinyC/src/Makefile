@@ -1,4 +1,5 @@
 TARGET=tinyC
+GCC11=-std=c++11
 AST_SRC=$(wildcard ast/*.cpp) $(wildcard ast/*/*.cpp)
 C_SRCFILES=${TARGET}_parser.cpp ${TARGET}_lexer.cpp $(AST_SRC) main.cpp
 OBJ_FILES=${C_SRCFILES:.cpp=.o}
@@ -8,7 +9,7 @@ TOKENS=tokens.h
 all: ${TARGET}
 
 $(TARGET):	$(OBJ_FILES)
-	g++ -g -o $@ $(OBJ_FILES)
+	g++ $(GCC11) -o $@ $(OBJ_FILES)
 
 ${TARGET}_lexer.cpp: ${TARGET}.l
 	flex -i -o $@ $<
@@ -17,7 +18,7 @@ ${TARGET}_parser.cpp: ${TARGET}.y
 	bison -Werror --report=all --defines=${TOKENS} -o $@ $<
 
 %.o: %.cpp ${TOKENS}
-	g++ -c -g -o $@ $@
+	g++ $(GCC11) -c -o $@ $@
 
 clean:
 	rm -f $(wildcard *.o)

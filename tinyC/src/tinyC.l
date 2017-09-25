@@ -51,7 +51,7 @@ H			[a-fA-F0-9]
 {L}({L}|{D}|_)*		{ count(); yylval.id_t = strdup(yytext); return ID_TK; }
 
 0[xX]{H}+			{ count(); return NUMBER_TK; }
-{D}+				{ count(); return NUMBER_TK; }
+{D}+				{ count(); yylval.num_t = atoi(yytext); return NUMBER_TK; }
 
 '(\\.|[^\\'])+'		{ count(); yytext[yyleng-1] = '\0'; yylval.id_t = strdup(&yytext[1]); return CHAR_LITERAL_TK; }
 \"(\\.|[^\\"])*\"	{ count(); yytext[yyleng-1] = '\0'; yylval.id_t = strdup(&yytext[1]); return STRING_LITERAL_TK; }

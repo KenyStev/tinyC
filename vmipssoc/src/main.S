@@ -33,13 +33,13 @@ main:
 
 # ExpressionStatement
 # AssignmentExpr
-	li $t1, -1723029344
+	li $t1, 5
 	sw $t1, x
 	move $v0, $t0
 
 # ExpressionStatement
 # AssignmentExpr
-	li $t2, -1723028784
+	li $t2, 7
 	sw $t2, y
 	move $v0, $t1
 
