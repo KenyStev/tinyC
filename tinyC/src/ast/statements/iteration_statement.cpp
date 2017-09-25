@@ -23,37 +23,26 @@ void WhileStatement::genCode(string &code)
 // genS(For);
 void ForStatement::genCode(string &code)
 {
-    // vars[id] = 0;
-    codeData se,fe;
+    codeData se, ce, fe;
     startExpr->genCode(se);
+    cond->genCode(ce);
     endExpr->genCode(fe);
-
     string block_code;
     block->genCode(block_code);
 
     string lfor = nextInternalLaber("for");
     string lendfor = nextInternalLaber("end_for");
-    string branch = nextTemp();
 
     code = "# ForStatement\n";
     code += se.code + "\n";
-    // code += "\tsw " + se.place + ", " + id + "\n";
-    code += fe.code + "\n";
-    
-    code += "\taddi $sp, $sp, -4\n";
-    code += "\tsw " + fe.place + ", ($sp)\n";
-    code += lfor + ": \n";
-    code += "\tlw " + fe.place + ", ($sp)\n";
-    code += "\tsle " + branch + ", " + se.place + ", " + fe.place + "\n";
-    code += "\tbeqz " + branch + ", " + lendfor + "\n";
+    code += lfor + ":\n";
+    code += ce.code + "\n";
+    code += "\tbeqz " + ce.place + ", " + lendfor + "\n";
     code += block_code + "\n";
-    // code += "\tlw " + se.place + ", " + id + "\n";
-    code += "\taddi " + se.place + ", "+se.place + ", 1\n";
-    // code += "\tsw " + se.place + ", " + id+"\n";
+    code += fe.code + "\n";
     code += "\tj " + lfor + "\n";
     code += lendfor + ": \n";
-    code += "\taddi $sp, $sp, 4";
     releaseTemp(se.place);
     releaseTemp(fe.place);
-    releaseTemp(branch);
+    releaseTemp(ce.place);
 }

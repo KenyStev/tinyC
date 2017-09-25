@@ -8,12 +8,8 @@ void AssignmentExpr::genCode(codeData &data)
 		codeData cd;
 		expr2->genCode(cd);
 		releaseTemp(cd.place);
-
-		// vars[((IdExpr*)expr1)->id] = 0;
-
 		data.code = "# AssignmentExpr\n";
 		data.code += cd.code + "\n";
-		// data.code += "\tla "+data.place + ", " +((IdExpr*)expr1)->id + "\n";
 		data.code += "\tsw "+cd.place + ", "+ ((IdExpr*)expr1)->id ;
 	}
 }
