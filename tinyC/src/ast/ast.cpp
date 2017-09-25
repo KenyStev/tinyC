@@ -110,42 +110,53 @@ void PrintStatement::genCode(string &code)
     it++;
     string format = ((StringExpr*)*str_f)->str;
     string buff;
-    for (int i = 0; i < format.size(); ++i)
-    {
-        if (format[i]=='%')
+    if(lexpr.size()>1)
+        for (int i = 0; i < format.size(); ++i)
         {
-            string ls = nextLstringFor(buff);
-            code += "\tla $a0, " + ls + "\n";
-            code += "\tjal puts\n\n";
-            buff = "";
-
-            i++;
-            Expr *expr = *it;
-            codeData cd;
-            expr->genCode(cd);
-            code += cd.code+"\n";
-            releaseTemp(cd.place);
-            code += "\tmove $a0, " + cd.place+"\n";
-
-            switch(format[i])
+            if (format[i]=='%')
             {
-                case 's': {
-                    code += "\tjal puts\n";
-                    break;
+                string ls = nextLstringFor(buff);
+                code += "\tla $a0, " + ls + "\n";
+                code += "\tjal puts\n\n";
+                buff = "";
+
+                i++;
+                Expr *expr = *it;
+                codeData cd;
+                expr->genCode(cd);
+                code += cd.code+"\n";
+                releaseTemp(cd.place);
+                code += "\tmove $a0, " + cd.place+"\n";
+
+                switch(format[i])
+                {
+                    case 's': {
+                        code += "\tjal puts\n";
+                        break;
+                    }
+                    case 'c': {
+                        code += "\tjal put_char\n";
+                        break;
+                    }
+                    default: {
+                        code += "\tjal put_udecimal\n";
+                        break;
+                    }
                 }
-                case 'c': {
-                    code += "\tjal put_char\n";
-                    break;
-                }
-                default: {
-                    code += "\tjal put_udecimal\n";
-                    break;
-                }
+                it++;
+            }else{
+                buff.push_back(format[i]);
             }
-            it++;
-        }else{
-            buff.push_back(format[i]);
         }
+    else
+    {
+        Expr *expr = *str_f;
+        codeData cd;
+        expr->genCode(cd);
+        code += cd.code+"\n";
+        releaseTemp(cd.place);
+        code += "\tmove $a0, " + cd.place+"\n";
+        code += "\tjal puts\n";
     }
     code += "\n\n\tli $a0, '\\n' \n\tjal put_char";
 }
