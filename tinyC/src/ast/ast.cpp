@@ -150,7 +150,6 @@ void PrintStatement::genCode(string &code)
     code += "\n\n\tli $a0, '\\n' \n\tjal put_char";
 }
 
-// genS(Call);
 void CallStatement::genCode(string &code)
 {
     code = "# CallStatement\n";
@@ -169,11 +168,9 @@ void CallStatement::genCode(string &code)
     }
 }
 
-// genS(Assign);
 void AssignStatement::genCode(string &code)
 {
     vars[id] = 0;
-    // int result = expr->evaluate();
     codeData cd;
     expr->genCode(cd);
 
